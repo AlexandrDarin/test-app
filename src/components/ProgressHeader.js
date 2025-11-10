@@ -2,57 +2,53 @@
 import React from 'react';
 import './ProgressHeader.css';
 
-function ProgressHeader({ technologies }) {
-  const total = technologies.length;
-  const completed = technologies.filter(tech => tech.status === 'completed').length;
-  const inProgress = technologies.filter(tech => tech.status === 'in-progress').length;
-  const notStarted = technologies.filter(tech => tech.status === 'not-started').length;
-  
-  const completionPercentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+function ProgressHeader({ 
+  technologies, 
+  searchTerm, 
+  onSearchChange, 
+  filteredCount
+}) {
+  const studiedCount = technologies.filter(tech => tech.status === 'completed').length;
+  const inProgressCount = technologies.filter(tech => tech.status === 'in-progress').length;
+  const notStartedCount = technologies.filter(tech => tech.status === 'not-started').length;
 
   return (
     <div className="progress-header">
-      <div className="header-glow"></div>
-      
-      <h1>
-        <span className="title-main">ТРЕКЕР ТЕХНОЛОГИЙ</span>
-        <span className="title-sub">СИСТЕМА МОНИТОРИНГА ПРОГРЕССА</span>
-      </h1>
-      
-      <div className="stats-container">
-        <div className="stat-item">
-          <span className="stat-number neon-cyan">{total}</span>
-          <span className="stat-label">Всего технологий</span>
-        </div>
+      <div className="header-main">
+        <h1>
+          <span className="header-icon">🚀</span>
+          Трекер изучения технологий
+        </h1>
         
-        <div className="stat-item">
-          <span className="stat-number neon-green">{completed}</span>
-          <span className="stat-label">Изучено</span>
-        </div>
-        
-        <div className="stat-item">
-          <span className="stat-number neon-blue">{inProgress}</span>
-          <span className="stat-label">В процессе</span>
-        </div>
-        
-        <div className="stat-item">
-          <span className="stat-number neon-red">{notStarted}</span>
-          <span className="stat-label">Не начато</span>
+        <div className="progress-stats">
+          <div className="stat-item">
+            <span className="stat-value">{studiedCount}</span>
+            <span className="stat-label">ЗАВЕРШЕНО</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">{inProgressCount}</span>
+            <span className="stat-label">В ПРОЦЕССЕ</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-value">{notStartedCount}</span>
+            <span className="stat-label">НЕ НАЧАТО</span>
+          </div>
         </div>
       </div>
 
-      <div className="progress-section">
-        <div className="progress-info">
-          <span className="neon-cyan">ОБЩИЙ ПРОГРЕСС: {completionPercentage}%</span>
-          <span className="neon-white">{completed} ИЗ {total}</span>
+      <div className="search-container">
+        <div className="search-input-wrapper">
+          <span className="search-icon">🔍</span>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Поиск по технологиям, описанию или заметкам..."
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+          />
         </div>
-        
-        <div className="progress-bar">
-          <div 
-            className="progress-fill"
-            style={{ width: `${completionPercentage}%` }}
-          ></div>
-          <div className="progress-glow"></div>
+        <div className="search-results">
+          Найдено: <span className="results-count">{filteredCount}</span> технологий
         </div>
       </div>
     </div>

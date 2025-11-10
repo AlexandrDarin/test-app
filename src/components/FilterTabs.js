@@ -1,27 +1,29 @@
-// components/FilterTabs.js
+// src/components/FilterTabs.js
 import React from 'react';
 import './FilterTabs.css';
 
 function FilterTabs({ activeFilter, onFilterChange, technologies }) {
   const filters = [
-    { key: 'all', label: 'Все', count: technologies.length },
-    { key: 'not-started', label: 'Не начатые', count: technologies.filter(t => t.status === 'not-started').length },
-    { key: 'in-progress', label: 'В процессе', count: technologies.filter(t => t.status === 'in-progress').length },
-    { key: 'completed', label: 'Завершенные', count: technologies.filter(t => t.status === 'completed').length }
+    { key: 'all', label: 'ВСЕ', count: technologies.length },
+    { key: 'not-started', label: 'НЕ НАЧАТЫЕ', count: technologies.filter(t => t.status === 'not-started').length },
+    { key: 'in-progress', label: 'В ПРОЦЕССЕ', count: technologies.filter(t => t.status === 'in-progress').length },
+    { key: 'completed', label: 'ЗАВЕРШЕННЫЕ', count: technologies.filter(t => t.status === 'completed').length }
   ];
 
   return (
     <div className="filter-tabs">
-      <h3>Фильтр по статусу</h3>
-      <div className="tabs-container">
+      <div className="filter-header">
+        <h3>ФИЛЬТР ПО СТАТУСУ</h3>
+      </div>
+      <div className="filter-buttons">
         {filters.map(filter => (
           <button
             key={filter.key}
-            className={`tab ${activeFilter === filter.key ? 'active' : ''}`}
+            className={`filter-btn ${activeFilter === filter.key ? 'active' : ''}`}
             onClick={() => onFilterChange(filter.key)}
           >
-            {filter.label}
-            <span className="tab-count">{filter.count}</span>
+            <span className="filter-label">{filter.label}</span>
+            <span className="filter-count">{filter.count}</span>
           </button>
         ))}
       </div>

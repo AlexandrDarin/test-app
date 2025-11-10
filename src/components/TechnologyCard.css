@@ -1,15 +1,18 @@
 /* components/TechnologyCard.css */
 .technology-card {
-  background: #1a1a1a;
+  background: rgba(18, 18, 18, 0.8);
   border: 1px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 0;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .technology-card::before {
@@ -19,8 +22,25 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #fff, transparent);
-  opacity: 0.1;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.technology-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 255, 0.03) 0%, 
+    rgba(0, 255, 136, 0.03) 50%, 
+    rgba(0, 170, 255, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .card-glow {
@@ -32,25 +52,38 @@
   background: currentColor;
   opacity: 0;
   transition: opacity 0.3s ease;
+  filter: blur(1px);
 }
 
 .technology-card:hover {
-  transform: translateY(-4px);
-  border-color: #666;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-8px) scale(1.02);
+  border-color: currentColor;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px currentColor,
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.technology-card:hover::before,
+.technology-card:hover::after {
+  opacity: 1;
 }
 
 .technology-card:hover .card-glow {
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .technology-card.selected {
   border-color: #00ffff;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  box-shadow: 
+    0 0 0 2px #00ffff,
+    0 20px 40px rgba(0, 255, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: glowPulse 2s infinite;
 }
 
 .technology-card.selected .card-glow {
-  opacity: 0.6;
+  opacity: 0.8;
   background: #00ffff;
 }
 
@@ -58,78 +91,283 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .category-badge {
-  background: #333;
+  background: rgba(255, 255, 255, 0.1);
   color: #ccc;
-  padding: 4px 12px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  border: 1px solid #444;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.technology-card:hover .category-badge {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .status-icon {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   margin-left: 8px;
-  filter: drop-shadow(0 0 5px currentColor);
+  filter: drop-shadow(0 0 10px currentColor);
+  transition: all 0.3s ease;
+}
+
+.technology-card:hover .status-icon {
+  transform: scale(1.1);
 }
 
 .card-title {
-  margin: 0 0 12px 0;
-  font-size: 1.3rem;
+  margin: 0 0 16px 0;
+  font-size: 1.4rem;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  line-height: 1.3;
+  position: relative;
+  z-index: 2;
 }
 
 .card-description {
   color: #aaa;
-  margin: 0 0 16px 0;
-  line-height: 1.5;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Стили для секции заметок */
+.notes-section {
+  margin: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.notes-header:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.notes-toggle {
+  color: #00aaff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.3s ease;
+}
+
+.notes-header:hover .notes-toggle {
+  color: #00ffff;
+}
+
+.notes-arrow {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.9rem;
+}
+
+.notes-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.notes-progress-bar {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.notes-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00aaff, #00ffff);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.notes-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent);
+  animation: shimmer 2s infinite;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.note-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.note-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.note-item.completed {
+  background: rgba(0, 255, 136, 0.1);
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.note-item.completed:hover {
+  background: rgba(0, 255, 136, 0.15);
+  border-color: rgba(0, 255, 136, 0.5);
+}
+
+.note-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #666;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: transparent;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.note-item.completed .note-checkbox {
+  background: #00ff88;
+  border-color: #00ff88;
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}
+
+.note-text {
+  color: #ccc;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.note-item.completed .note-text {
+  color: #00ff88;
+  text-decoration: line-through;
+  opacity: 0.8;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .status-badge {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  border: 1px solid;
+  border: 2px solid;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.technology-card:hover .status-badge {
+  transform: scale(1.05);
 }
 
 .progress-indicator {
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 
 .progress-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #333;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+.progress-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .progress-dot.completed {
   background: #00ff88;
-  box-shadow: 0 0 6px #00ff88;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+.progress-dot.completed::after {
+  opacity: 0.3;
 }
 
 .progress-dot.in-progress {
   background: #00aaff;
-  box-shadow: 0 0 6px #00aaff;
+  box-shadow: 0 0 10px #00aaff;
+}
+
+.progress-dot.in-progress::after {
+  opacity: 0.3;
 }
 
 .selection-pulse {
@@ -139,9 +377,67 @@
   right: -2px;
   bottom: -2px;
   border: 2px solid #00ffff;
-  border-radius: 14px;
+  border-radius: 22px;
   animation: pulse 2s infinite;
   pointer-events: none;
+}
+
+/* Статусные стили с неоновыми цветами */
+.status-not-started {
+  color: #ff4444;
+}
+
+.status-not-started .status-badge {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+  border-color: #ff4444;
+  box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.status-not-started:hover {
+  color: #ff6666;
+}
+
+.status-in-progress {
+  color: #00aaff;
+}
+
+.status-in-progress .status-badge {
+  background: rgba(0, 170, 255, 0.1);
+  color: #00aaff;
+  border-color: #00aaff;
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.status-in-progress:hover {
+  color: #00ccff;
+}
+
+.status-completed {
+  color: #00ff88;
+}
+
+.status-completed .status-badge {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  border-color: #00ff88;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.status-completed:hover {
+  color: #66ffaa;
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulse {
@@ -159,36 +455,44 @@
   }
 }
 
-/* Статусные стили с неоновыми цветами */
-.status-not-started {
-  color: #ff4444;
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 30px currentColor, 0 0 40px currentColor;
+  }
 }
 
-.status-not-started .status-badge {
-  background: rgba(255, 68, 68, 0.1);
-  color: #ff4444;
-  border-color: #ff4444;
-  box-shadow: 0 0 10px rgba(255, 68, 68, 0.2);
-}
-
-.status-in-progress {
-  color: #00aaff;
-}
-
-.status-in-progress .status-badge {
-  background: rgba(0, 170, 255, 0.1);
-  color: #00aaff;
-  border-color: #00aaff;
-  box-shadow: 0 0 10px rgba(0, 170, 255, 0.2);
-}
-
-.status-completed {
-  color: #00ff88;
-}
-
-.status-completed .status-badge {
-  background: rgba(0, 255, 136, 0.1);
-  color: #00ff88;
-  border-color: #00ff88;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+/* Адаптивность */
+@media (max-width: 768px) {
+  .technology-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .status-icon {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+  }
+  
+  .notes-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .notes-progress-bar {
+    width: 100%;
+  }
 }

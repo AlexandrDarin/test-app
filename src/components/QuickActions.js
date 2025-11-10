@@ -1,33 +1,107 @@
 // components/QuickActions.js
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from './Modal';
 import './QuickActions.css';
 
-function QuickActions({ onMarkAllCompleted, onResetAll, onRandomNext }) {
+function QuickActions({ 
+  onMarkAllCompleted, 
+  onResetAll, 
+  onRandomNext, 
+  onExport, 
+  onShowStats,
+  progressPercent 
+}) {
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const handleExport = () => {
+    onExport();
+    setShowExportModal(true);
+  };
+
   return (
     <div className="quick-actions">
-      <h3>Быстрые действия</h3>
-      <div className="actions-buttons">
+      {/* Прогресс в QuickActions */}
+      <div className="progress-section">
+        <div className="progress-header">
+          <span>Общий прогресс</span>
+          <span className="progress-percent">{progressPercent}%</span>
+        </div>
+        <div className="progress-bar">
+          <div 
+            className="progress-fill" 
+            style={{ width: `${progressPercent}%` }}
+          ></div>
+        </div>
+      </div>
+
+      <div className="actions-header">
+        <h3>⚡ Быстрые действия</h3>
+      </div>
+      
+      <div className="action-buttons">
         <button 
-          className="action-btn complete-all"
-          onClick={onMarkAllCompleted}
+          onClick={onMarkAllCompleted} 
+          className="action-btn btn-completed"
+          title="Отметить все технологии как завершенные"
         >
-          ✅ Отметить все как выполненные
+          <span className="btn-icon">✅</span>
+          Завершить все
         </button>
         
         <button 
-          className="action-btn reset-all"
-          onClick={onResetAll}
+          onClick={onResetAll} 
+          className="action-btn btn-reset"
+          title="Сбросить статусы всех технологий"
         >
-          🔄 Сбросить все статусы
+          <span className="btn-icon">🔄</span>
+          Сбросить все
         </button>
         
         <button 
-          className="action-btn random-next"
-          onClick={onRandomNext}
+          onClick={onRandomNext} 
+          className="action-btn btn-random"
+          title="Выбрать случайную технологию для изучения"
         >
-          🎲 Случайный выбор следующей технологии
+          <span className="btn-icon">🎯</span>
+          Случайная
+        </button>
+        
+        <button 
+          onClick={handleExport} 
+          className="action-btn btn-export"
+          title="Экспортировать данные в JSON"
+        >
+          <span className="btn-icon">📤</span>
+          Экспорт
+        </button>
+        
+        <button 
+          onClick={onShowStats} 
+          className="action-btn btn-stats"
+          title="Показать статистику"
+        >
+          <span className="btn-icon">📊</span>
+          Статистика
         </button>
       </div>
+
+      <Modal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        title="✅ Экспорт завершен"
+      >
+        <div className="modal-export-content">
+          <p style={{textAlign: 'center', marginBottom: '20px', fontSize: '1.1rem'}}>
+            Данные успешно экспортированы в JSON файл!
+          </p>
+          <button 
+            onClick={() => setShowExportModal(false)}
+            className="modal-close-btn"
+          >
+            Закрыть
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

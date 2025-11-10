@@ -1,11 +1,14 @@
 /* components/QuickActions.css */
 .quick-actions {
-  background: #0a0a0a;
-  padding: 24px;
-  border-radius: 16px;
-  margin-bottom: 24px;
+  background: rgba(18, 18, 18, 0.8);
   border: 1px solid #333;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 32px;
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
 }
@@ -17,40 +20,140 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #fff, transparent);
-  opacity: 0.1;
+  background: linear-gradient(90deg, 
+    transparent, 
+    #ff44aa, 
+    #aa44ff, 
+    transparent
+  );
+  animation: shimmer 3s infinite;
 }
 
-.quick-actions h3 {
-  margin: 0 0 20px 0;
+/* Секция прогресса в QuickActions */
+.progress-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    #00ffff, 
+    #00ff88, 
+    transparent
+  );
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
   color: #fff;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
+  font-weight: 700;
 }
 
-.actions-buttons {
+.progress-percent {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.progress-bar {
+  height: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    #00aaff, 
+    #00ffff, 
+    #00ff88,
+    #00ffff,
+    #00aaff
+  );
+  border-radius: 12px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 
+    0 0 25px rgba(0, 255, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  animation: shimmer 2s infinite;
+  border-radius: 12px;
+}
+
+.actions-header h3 {
+  color: #fff;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #ff44aa, #aa44ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(255, 68, 170, 0.3);
+}
+
+.action-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
 }
 
 .action-btn {
-  padding: 16px 20px;
-  border: 1px solid #333;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 2px solid #333;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  letter-spacing: 0.5px;
+  color: #ccc;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
 }
@@ -59,57 +162,148 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.action-btn:hover::before {
-  left: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .action-btn:hover {
-  transform: translateY(-2px);
-  border-color: #666;
+  transform: translateY(-5px);
+  border-color: currentColor;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px currentColor;
+  color: #fff;
 }
 
-.complete-all {
-  border-color: #00ff88;
+.action-btn:hover::before {
+  opacity: 1;
+}
+
+.btn-completed {
   color: #00ff88;
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
 }
 
-.complete-all:hover {
-  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
-  background: rgba(0, 255, 136, 0.1);
+.btn-completed:hover {
+  box-shadow: 
+    0 10px 30px rgba(0, 255, 136, 0.3),
+    0 0 0 1px #00ff88;
 }
 
-.reset-all {
-  border-color: #ff4444;
-  color: #ff4444;
-  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+.btn-reset {
+  color: #ffaa00;
 }
 
-.reset-all:hover {
-  box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
-  background: rgba(255, 68, 68, 0.1);
+.btn-reset:hover {
+  box-shadow: 
+    0 10px 30px rgba(255, 170, 0, 0.3),
+    0 0 0 1px #ffaa00;
 }
 
-.random-next {
-  border-color: #00aaff;
+.btn-random {
   color: #00aaff;
-  text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
 }
 
-.random-next:hover {
-  box-shadow: 0 4px 20px rgba(0, 170, 255, 0.3);
-  background: rgba(0, 170, 255, 0.1);
+.btn-random:hover {
+  box-shadow: 
+    0 10px 30px rgba(0, 170, 255, 0.3),
+    0 0 0 1px #00aaff;
+}
+
+.btn-export {
+  color: #ff44aa;
+}
+
+.btn-export:hover {
+  box-shadow: 
+    0 10px 30px rgba(255, 68, 170, 0.3),
+    0 0 0 1px #ff44aa;
+}
+
+.btn-stats {
+  color: #aa44ff;
+}
+
+.btn-stats:hover {
+  box-shadow: 
+    0 10px 30px rgba(170, 68, 255, 0.3),
+    0 0 0 1px #aa44ff;
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+  filter: drop-shadow(0 0 8px currentColor);
+  transition: transform 0.3s ease;
+}
+
+.action-btn:hover .btn-icon {
+  transform: scale(1.2);
+}
+
+/* Стили для модальных окон */
+.modal-export-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-close-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #00aaff, #00ffff);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+  min-width: 120px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-close-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 170, 255, 0.4);
+  background: linear-gradient(135deg, #00ffff, #00ff88);
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @media (max-width: 768px) {
-  .actions-buttons {
+  .quick-actions {
+    padding: 24px 20px;
+  }
+  
+  .action-buttons {
     grid-template-columns: 1fr;
+  }
+  
+  .progress-section {
+    padding: 16px;
+  }
+  
+  .progress-header {
+    font-size: 1rem;
+  }
+  
+  .progress-percent {
+    font-size: 1.3rem;
+  }
+  
+  .progress-bar {
+    height: 14px;
   }
 }
