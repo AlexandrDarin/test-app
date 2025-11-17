@@ -2,10 +2,10 @@
 import useLocalStorage from './useLocalStorage';
 
 const initialTechnologies = [
-  {
-    id: 1,
-    title: 'React Components',
-    description: 'Изучение функциональных и классовых компонентов, их жизненного цикла',
+  { 
+    id: 1, 
+    title: 'React Components', 
+    description: 'Изучение функциональных и классовых компонентов, их жизненного цикла', 
     status: 'completed',
     category: 'React Basics',
     notes: [
@@ -13,10 +13,10 @@ const initialTechnologies = [
       { id: 2, text: "Разобраться с жизненным циклом", completed: true }
     ]
   },
-  {
-    id: 2,
-    title: 'JSX Syntax',
-    description: 'Освоение синтаксиса JSX и его отличий от обычного HTML',
+  { 
+    id: 2, 
+    title: 'JSX Syntax', 
+    description: 'Освоение синтаксиса JSX и его отличий от обычного HTML', 
     status: 'in-progress',
     category: 'React Basics',
     notes: [
@@ -24,18 +24,18 @@ const initialTechnologies = [
       { id: 2, text: "Условный рендеринг", completed: false }
     ]
   },
-  {
-    id: 3,
-    title: 'State Management',
-    description: 'Работа с состоянием компонентов с помощью useState и useReducer',
+  { 
+    id: 3, 
+    title: 'State Management', 
+    description: 'Работа с состоянием компонентов с помощью useState и useReducer', 
     status: 'not-started',
     category: 'Advanced React',
     notes: []
   },
-  {
-    id: 4,
-    title: 'Props and Data Flow',
-    description: 'Передача данных между компонентами через props',
+  { 
+    id: 4, 
+    title: 'Props and Data Flow', 
+    description: 'Передача данных между компонентами через props', 
     status: 'not-started',
     category: 'React Basics',
     notes: []
@@ -46,8 +46,8 @@ function useTechnologies() {
   const [technologies, setTechnologies] = useLocalStorage('technologies', initialTechnologies);
 
   const updateTechnology = (techId, updatedFields) => {
-    setTechnologies(prev =>
-      prev.map(tech =>
+    setTechnologies(prev => 
+      prev.map(tech => 
         tech.id === techId ? { ...tech, ...updatedFields } : tech
       )
     );
@@ -69,7 +69,7 @@ function useTechnologies() {
   };
 
   const updateStatus = (techId) => {
-    setTechnologies(prevTech =>
+    setTechnologies(prevTech => 
       prevTech.map(tech => {
         if (tech.id === techId) {
           const statusOrder = ['not-started', 'in-progress', 'completed'];
@@ -83,30 +83,30 @@ function useTechnologies() {
   };
 
   const setSpecificStatus = (techId, status) => {
-    setTechnologies(prevTech =>
-      prevTech.map(tech =>
+    setTechnologies(prevTech => 
+      prevTech.map(tech => 
         tech.id === techId ? { ...tech, status } : tech
       )
     );
   };
 
   const updateNote = (techId, noteId) => {
-    setTechnologies(prevTech =>
+    setTechnologies(prevTech => 
       prevTech.map(tech => {
         if (tech.id === techId) {
           const updatedNotes = tech.notes.map(note =>
             note.id === noteId ? { ...note, completed: !note.completed } : note
           );
-
+          
           const completedNotes = updatedNotes.filter(note => note.completed).length;
           let newStatus = tech.status;
-
+          
           if (completedNotes === updatedNotes.length && updatedNotes.length > 0) {
             newStatus = 'completed';
           } else if (completedNotes > 0) {
             newStatus = 'in-progress';
           }
-
+          
           return { ...tech, notes: updatedNotes, status: newStatus };
         }
         return tech;
@@ -115,7 +115,7 @@ function useTechnologies() {
   };
 
   const addNote = (techId, noteText) => {
-    setTechnologies(prevTech =>
+    setTechnologies(prevTech => 
       prevTech.map(tech => {
         if (tech.id === techId) {
           const newNote = {
@@ -123,8 +123,8 @@ function useTechnologies() {
             text: noteText,
             completed: false
           };
-          return {
-            ...tech,
+          return { 
+            ...tech, 
             notes: [...tech.notes, newNote],
             status: tech.status === 'not-started' ? 'in-progress' : tech.status
           };
@@ -135,18 +135,18 @@ function useTechnologies() {
   };
 
   const deleteNote = (techId, noteId) => {
-    setTechnologies(prevTech =>
+    setTechnologies(prevTech => 
       prevTech.map(tech => {
         if (tech.id === techId) {
           const updatedNotes = tech.notes.filter(note => note.id !== noteId);
-
+          
           let newStatus = tech.status;
           if (updatedNotes.length === 0) {
             newStatus = 'not-started';
           } else if (updatedNotes.every(note => note.completed)) {
             newStatus = 'completed';
           }
-
+          
           return { ...tech, notes: updatedNotes, status: newStatus };
         }
         return tech;
@@ -155,7 +155,7 @@ function useTechnologies() {
   };
 
   const editNote = (techId, noteId, newText) => {
-    setTechnologies(prevTech =>
+    setTechnologies(prevTech => 
       prevTech.map(tech => {
         if (tech.id === techId) {
           const updatedNotes = tech.notes.map(note =>
@@ -169,9 +169,9 @@ function useTechnologies() {
   };
 
   const markAllAsCompleted = () => {
-    setTechnologies(prevTech =>
-      prevTech.map(tech => ({
-        ...tech,
+    setTechnologies(prevTech => 
+      prevTech.map(tech => ({ 
+        ...tech, 
         status: 'completed',
         notes: tech.notes.map(note => ({ ...note, completed: true }))
       }))
@@ -179,9 +179,9 @@ function useTechnologies() {
   };
 
   const resetAllStatuses = () => {
-    setTechnologies(prevTech =>
-      prevTech.map(tech => ({
-        ...tech,
+    setTechnologies(prevTech => 
+      prevTech.map(tech => ({ 
+        ...tech, 
         status: 'not-started',
         notes: tech.notes.map(note => ({ ...note, completed: false }))
       }))
@@ -215,9 +215,9 @@ function useTechnologies() {
 
   const searchTechnologies = (searchTerm) => {
     if (!searchTerm.trim()) return technologies;
-
+    
     const term = searchTerm.toLowerCase();
-    return technologies.filter(tech =>
+    return technologies.filter(tech => 
       tech.title.toLowerCase().includes(term) ||
       tech.description.toLowerCase().includes(term) ||
       tech.category.toLowerCase().includes(term) ||
@@ -233,10 +233,10 @@ function useTechnologies() {
 
   const getStats = () => {
     const totalNotes = technologies.reduce((sum, tech) => sum + tech.notes.length, 0);
-    const completedNotes = technologies.reduce((sum, tech) =>
+    const completedNotes = technologies.reduce((sum, tech) => 
       sum + tech.notes.filter(note => note.completed).length, 0
     );
-
+    
     const categories = getCategories();
     const categoryStats = categories.map(category => {
       const categoryTechs = technologies.filter(tech => tech.category === category);

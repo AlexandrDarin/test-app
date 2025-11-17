@@ -1,111 +1,153 @@
+// src/pages/Statistics.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import './Statistics.css';
 
 function Statistics({ technologies, getStats }) {
   const stats = getStats();
 
+  const statCards = [
+    {
+      icon: '📊',
+      title: 'Всего технологий',
+      value: stats.totalTechnologies,
+      color: '#00aaff'
+    },
+    {
+      icon: '✅',
+      title: 'Завершено',
+      value: stats.completedTechnologies,
+      color: '#00ff88'
+    },
+    {
+      icon: '🔄',
+      title: 'В процессе',
+      value: stats.inProgressTechnologies,
+      color: '#ffaa00'
+    },
+    {
+      icon: '⏳',
+      title: 'Не начато',
+      value: stats.notStartedTechnologies,
+      color: '#ff6b6b'
+    },
+    {
+      icon: '📝',
+      title: 'Всего заметок',
+      value: stats.totalNotes,
+      color: '#9b59b6'
+    },
+    {
+      icon: '🎯',
+      title: 'Выполнено заметок',
+      value: stats.completedNotes,
+      color: '#2ecc71'
+    }
+  ];
+
   return (
     <div className="container">
-      <div className="page">
-        <div className="page-header">
-          <h1>📊 Статистика прогресса</h1>
-          <Link to="/" className="back-link">
-            ← На главную
-          </Link>
-        </div>
+      <div className="page-header">
+        <h1>📈 Статистика</h1>
+        <p>Обзор вашего прогресса в изучении технологий</p>
+      </div>
 
-        <div className="stats-grid-large">
-          <div className="stat-card-large">
-            <div className="stat-number">{stats.totalTechnologies}</div>
-            <div className="stat-label">Всего технологий</div>
+      {/* Основная статистика */}
+      <div className="stats-grid">
+        {statCards.map((stat, index) => (
+          <div key={index} className="stat-card">
+            <div className="stat-icon" style={{ color: stat.color }}>
+              {stat.icon}
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">{stat.value}</div>
+              <div className="stat-title">{stat.title}</div>
+            </div>
+            <div 
+              className="stat-glow" 
+              style={{ backgroundColor: stat.color }}
+            ></div>
           </div>
-          <div className="stat-card-large">
-            <div className="stat-number" style={{color: '#00ff88'}}>{stats.completedTechnologies}</div>
-            <div className="stat-label">Завершено</div>
-          </div>
-          <div className="stat-card-large">
-            <div className="stat-number" style={{color: '#00aaff'}}>{stats.inProgressTechnologies}</div>
-            <div className="stat-label">В процессе</div>
-          </div>
-          <div className="stat-card-large">
-            <div className="stat-number" style={{color: '#ff4444'}}>{stats.notStartedTechnologies}</div>
-            <div className="stat-label">Не начато</div>
+        ))}
+      </div>
+
+      {/* Прогресс по категориям */}
+      <div className="categories-section">
+        <h2>📂 Прогресс по категориям</h2>
+        <div className="categories-grid">
+          {stats.categories.map((category, index) => (
+            <div key={index} className="category-card">
+              <div className="category-header">
+                <h3>{category.category}</h3>
+                <span className="category-progress">{category.progress}%</span>
+              </div>
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill"
+                  style={{ 
+                    width: `${category.progress}%`,
+                    background: `linear-gradient(90deg, #00ff88, #00ccff)`
+                  }}
+                ></div>
+              </div>
+              <div className="category-stats">
+                <span>✅ {category.completed} из {category.total}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Визуализация прогресса */}
+      <div className="progress-visualization">
+        <h2>🎯 Общий прогресс</h2>
+        <div className="progress-circle-large">
+          <div className="circle-background"></div>
+          <div 
+            className="circle-progress"
+            style={{ 
+              background: `conic-gradient(
+                #00ff88 0% ${stats.progressPercent}%, 
+                #333 ${stats.progressPercent}% 100%
+              )`
+            }}
+          ></div>
+          <div className="circle-text">
+            <div className="progress-percent-large">{stats.progressPercent}%</div>
+            <div className="progress-label">Завершено</div>
           </div>
         </div>
         
-        <div className="progress-section">
-          <div className="progress-header">
-            <span>Общий прогресс изучения</span>
-            <span className="progress-percent">{stats.progressPercent}%</span>
+        <div className="progress-breakdown">
+          <div className="breakdown-item">
+            <div className="breakdown-color completed"></div>
+            <span>Завершено: {stats.completedTechnologies}</span>
           </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${stats.progressPercent}%` }}
-            ></div>
+          <div className="breakdown-item">
+            <div className="breakdown-color in-progress"></div>
+            <span>В процессе: {stats.inProgressTechnologies}</span>
           </div>
-        </div>
-        
-        <div className="notes-stats">
-          <h4>📝 Прогресс по заметкам</h4>
-          <div className="notes-progress">
-            <span style={{marginBottom: '8px', display: 'block', fontSize: '1.1rem'}}>
-              {stats.completedNotes}/{stats.totalNotes} завершено
-            </span>
-            <div className="notes-progress-bar">
-              <div 
-                className="notes-progress-fill" 
-                style={{ 
-                  width: `${stats.totalNotes > 0 ? Math.round((stats.completedNotes / stats.totalNotes) * 100) : 0}%` 
-                }}
-              ></div>
-            </div>
+          <div className="breakdown-item">
+            <div className="breakdown-color not-started"></div>
+            <span>Не начато: {stats.notStartedTechnologies}</span>
           </div>
         </div>
+      </div>
 
-        <div className="technologies-breakdown">
-          <h3 style={{
-            background: 'linear-gradient(135deg, #ff44aa, #aa44ff)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textShadow: '0 0 20px rgba(255, 68, 170, 0.3)',
-            marginBottom: '1.5rem',
-            fontSize: '1.5rem',
-            fontWeight: '700'
-          }}>
-            📈 Распределение по статусам
-          </h3>
-          <div className="breakdown-chart">
-            <div 
-              className="breakdown-segment completed" 
-              style={{ width: `${(stats.completedTechnologies / stats.totalTechnologies) * 100}%` }}
-              title={`Завершено: ${stats.completedTechnologies}`}
-            ></div>
-            <div 
-              className="breakdown-segment in-progress" 
-              style={{ width: `${(stats.inProgressTechnologies / stats.totalTechnologies) * 100}%` }}
-              title={`В процессе: ${stats.inProgressTechnologies}`}
-            ></div>
-            <div 
-              className="breakdown-segment not-started" 
-              style={{ width: `${(stats.notStartedTechnologies / stats.totalTechnologies) * 100}%` }}
-              title={`Не начато: ${stats.notStartedTechnologies}`}
-            ></div>
-          </div>
-          <div className="breakdown-legend">
-            <div className="legend-item">
-              <div className="legend-color completed"></div>
-              <span>Завершено ({stats.completedTechnologies})</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color in-progress"></div>
-              <span>В процессе ({stats.inProgressTechnologies})</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color not-started"></div>
-              <span>Не начато ({stats.notStartedTechnologies})</span>
-            </div>
+      {/* Мотивационное сообщение */}
+      <div className="motivation-section">
+        <div className="motivation-card">
+          <div className="motivation-icon">🚀</div>
+          <div className="motivation-content">
+            <h3>Продолжайте в том же духе!</h3>
+            <p>
+              {stats.progressPercent === 100 
+                ? '🎉 Поздравляем! Вы изучили все технологии!'
+                : stats.progressPercent >= 70 
+                ? 'Отличный прогресс! Вы близки к завершению!'
+                : stats.progressPercent >= 40 
+                ? 'Хорошие результаты! Продолжайте двигаться вперед!'
+                : 'Начало положено! Каждый день - новый шаг к цели!'}
+            </p>
           </div>
         </div>
       </div>

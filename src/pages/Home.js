@@ -121,12 +121,27 @@ function Home({
         </div>
       )}
 
-      {filteredTechnologies.length === 0 && (
-        <div className="empty-state">
-          <h3>🕳️ Нет технологий для отображения</h3>
-          <p>Измените фильтр или поисковый запрос, чтобы увидеть больше технологий</p>
-        </div>
-      )}
+     {filteredTechnologies.length === 0 && (
+  <div className="empty-state">
+    <div className="empty-icon">🕳️</div>
+    <h3>Нет технологий для отображения</h3>
+    <p>Измените фильтр или поисковый запрос, чтобы увидеть больше технологий</p>
+    <div className="empty-actions">
+      <button 
+        onClick={() => {
+          setSearchTerm('');
+          setActiveFilter('all');
+        }}
+        className="btn btn-primary"
+      >
+        🔄 Сбросить фильтры
+      </button>
+      <Link to="/technologies" className="btn btn-secondary">
+        📚 Все технологии
+      </Link>
+    </div>
+  </div>
+)}
 
       {/* Модальные окна остаются такими же как в вашем коде */}
       <Modal

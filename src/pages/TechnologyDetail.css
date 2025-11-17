@@ -52,6 +52,53 @@
   z-index: 2;
 }
 
+/* Заголовок страницы */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-link {
+  color: #00aaff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-link:hover {
+  color: #00ff88;
+  transform: translateX(-5px);
+}
+
+.jobs-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #00aaff, #0077ff);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3);
+}
+
+.jobs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 170, 255, 0.5);
+  background: linear-gradient(135deg, #00bbff, #0088ff);
+}
+
+/* Мета-информация */
 .detail-header {
   display: flex;
   justify-content: space-between;
@@ -59,6 +106,13 @@
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .category-badge {
@@ -71,6 +125,31 @@
   letter-spacing: 0.5px;
   box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
   border: 2px solid transparent;
+}
+
+.difficulty-badge {
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 2px solid transparent;
+}
+
+.difficulty-beginner {
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  color: #000;
+}
+
+.difficulty-intermediate {
+  background: linear-gradient(135deg, #00aaff, #0077ff);
+  color: #000;
+}
+
+.difficulty-advanced {
+  background: linear-gradient(135deg, #ff6b6b, #ff4444);
+  color: #fff;
 }
 
 .status-section {
@@ -111,8 +190,14 @@
   color: #fff;
 }
 
+/* Секции контента */
 .detail-section {
   margin-bottom: 3rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .detail-section h3 {
@@ -136,6 +221,50 @@
   font-size: 1.1rem;
 }
 
+/* Время изучения */
+.estimated-hours {
+  margin-top: 1rem;
+}
+
+.hours-badge {
+  background: linear-gradient(135deg, #ffc107, #ff9800);
+  color: #000;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+/* Ресурсы */
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resource-link {
+  color: #00aaff;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  word-break: break-all;
+  background: rgba(0, 170, 255, 0.1);
+  border: 1px solid rgba(0, 170, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.resource-link:hover {
+  background: rgba(0, 170, 255, 0.2);
+  border-color: rgba(0, 170, 255, 0.6);
+  transform: translateX(5px);
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+/* Заметки */
 .notes-header {
   display: flex;
   justify-content: space-between;
@@ -181,6 +310,12 @@
   transform: rotate(180deg);
 }
 
+.notes-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .notes-progress-bar {
   width: 150px;
   height: 8px;
@@ -212,6 +347,43 @@
   animation: shimmer 2s infinite;
 }
 
+.notes-progress-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 40px;
+  font-weight: 600;
+}
+
+/* Форма добавления заметок */
+.add-note-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.note-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.note-input:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Список заметок */
 .notes-list {
   display: flex;
   flex-direction: column;
@@ -303,6 +475,79 @@
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
+/* Действия с заметками */
+.note-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+/* Форма редактирования */
+.note-edit-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.note-edit-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid #00aaff;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+}
+
+.note-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.3);
+}
+
+.btn-small {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-success {
+  background: #00ff88;
+  color: #000;
+}
+
+.btn-success:hover {
+  background: #00e676;
+  transform: scale(1.05);
+}
+
+/* Пустые состояния */
+.empty-notes {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Анимации */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -314,14 +559,44 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
   .detail-main {
     padding: 2rem 1.5rem;
   }
   
+  .page-header {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  
   .detail-header {
     flex-direction: column;
     gap: 1.5rem;
+    align-items: flex-start;
+  }
+  
+  .tech-meta {
+    flex-direction: column;
     align-items: flex-start;
   }
   
@@ -336,11 +611,31 @@
     align-items: flex-start;
   }
   
+  .notes-progress {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
   .notes-progress-bar {
     width: 100%;
+    flex: 1;
+  }
+  
+  .add-note-form {
+    flex-direction: column;
+  }
+  
+  .note-actions {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    justify-content: flex-end;
   }
   
   .status-icon-large {
     font-size: 2rem;
+  }
+  
+  .detail-section {
+    padding: 1.5rem;
   }
 }

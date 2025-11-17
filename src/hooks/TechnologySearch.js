@@ -1,12 +1,12 @@
-// components/TechnologySearch.js
+// src/components/TechnologySearch.js
 import { useState, useEffect, useRef } from 'react';
+import './TechnologySearch.css';
 
 function TechnologySearch({ onSearch, technologies }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [localResults, setLocalResults] = useState([]);
   const searchTimeoutRef = useRef(null);
 
-  // Локальный поиск по уже загруженным технологиям
   const performLocalSearch = (query) => {
     if (!query.trim()) {
       setLocalResults([]);
@@ -23,17 +23,14 @@ function TechnologySearch({ onSearch, technologies }) {
     setLocalResults(results);
   };
 
-  // Обработчик изменения поискового запроса
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
 
-    // Очищаем предыдущий таймер
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Устанавливаем новый таймер для debounce (300ms)
     searchTimeoutRef.current = setTimeout(() => {
       performLocalSearch(value);
       if (onSearch) {
@@ -42,7 +39,14 @@ function TechnologySearch({ onSearch, technologies }) {
     }, 300);
   };
 
-  // Очистка при размонтировании
+  const clearSearch = () => {
+    setSearchTerm('');
+    setLocalResults([]);
+    if (onSearch) {
+      onSearch('');
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
@@ -56,7 +60,7 @@ function TechnologySearch({ onSearch, technologies }) {
       <div className="search-header">
         <h3>🔍 Поиск технологий</h3>
         <div className="search-stats">
-          Найдено: {searchTerm ? localResults.length : technologies.length}
+          Найдено: <span className="results-count">{searchTerm ? localResults.length : technologies.length}</span>
         </div>
       </div>
       
@@ -70,8 +74,9 @@ function TechnologySearch({ onSearch, technologies }) {
         />
         {searchTerm && (
           <button 
-            onClick={() => setSearchTerm('')}
+            onClick={clearSearch}
             className="clear-search"
+            title="Очистить поиск"
           >
             ✕
           </button>
@@ -104,14 +109,24 @@ function TechnologySearch({ onSearch, technologies }) {
           <div className="results-grid">
             {localResults.map(tech => (
               <div key={tech.id} className="search-result-card">
-                <h5>{tech.title}</h5>
-                <p>{tech.description}</p>
+                <div className="result-header">
+                  <h5>{tech.title}</h5>
+                  <span className={`status-badge status-${tech.status}`}>
+                    {tech.status === 'completed' ? '✅' : 
+                     tech.status === 'in-progress' ? '🔄' : '⏳'}
+                  </span>
+                </div>
+                <p className="result-description">{tech.description}</p>
                 <div className="tech-meta">
-                  <span className={`category ${tech.category}`}>
+                  <span className={`category category-${tech.category.toLowerCase()}`}>
                     {tech.category}
                   </span>
-                  <span className="language">{tech.language}</span>
-                  <span className="difficulty">{tech.difficulty}</span>
+                  {tech.language && (
+                    <span className="language">{tech.language}</span>
+                  )}
+                  <span className={`difficulty difficulty-${tech.difficulty}`}>
+                    {tech.difficulty}
+                  </span>
                 </div>
               </div>
             ))}

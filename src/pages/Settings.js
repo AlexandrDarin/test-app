@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import './Settings.css';
 
 function Settings({ technologies, resetAllStatuses, markAllAsCompleted }) {
   const fileInputRef = useRef(null);

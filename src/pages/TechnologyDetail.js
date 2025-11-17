@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import JobOpportunities from '../components/JobOpportunities';
 import './TechnologyDetail.css';
 
-function TechnologyDetail({ technologies, updateStatus, updateNote }) {
+function TechnologyDetail({ technologies, updateStatus, updateNote, addNote, deleteNote, editNote }) {
   const { techId } = useParams();
   const navigate = useNavigate();
   const [notesExpanded, setNotesExpanded] = useState(false);
+  const [showJobs, setShowJobs] = useState(false);
+  const [newNoteText, setNewNoteText] = useState('');
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [editingNoteText, setEditingNoteText] = useState('');
   
   const technology = technologies.find(tech => tech.id === parseInt(techId));
 
@@ -31,6 +36,35 @@ function TechnologyDetail({ technologies, updateStatus, updateNote }) {
     updateNote(technology.id, noteId);
   };
 
+  const handleAddNote = () => {
+    if (newNoteText.trim()) {
+      addNote(technology.id, newNoteText.trim());
+      setNewNoteText('');
+    }
+  };
+
+  const handleDeleteNote = (noteId) => {
+    deleteNote(technology.id, noteId);
+  };
+
+  const handleStartEdit = (note) => {
+    setEditingNoteId(note.id);
+    setEditingNoteText(note.text);
+  };
+
+  const handleSaveEdit = () => {
+    if (editingNoteText.trim()) {
+      editNote(technology.id, editingNoteId, editingNoteText.trim());
+      setEditingNoteId(null);
+      setEditingNoteText('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingNoteId(null);
+    setEditingNoteText('');
+  };
+
   const getStatusText = () => {
     switch (technology.status) {
       case 'completed':
@@ -47,13 +81,13 @@ function TechnologyDetail({ technologies, updateStatus, updateNote }) {
   const getStatusIcon = () => {
     switch (technology.status) {
       case 'completed':
-        return '⚡';
+        return '✅';
       case 'in-progress':
-        return '🌀';
+        return '🔄';
       case 'not-started':
-        return '💤';
+        return '⏳';
       default:
-        return '💤';
+        return '⏳';
     }
   };
 
@@ -69,12 +103,26 @@ function TechnologyDetail({ technologies, updateStatus, updateNote }) {
             ← Назад к списку
           </Link>
           <h1>{technology.title}</h1>
+          <button 
+            onClick={() => setShowJobs(true)}
+            className="btn btn-primary jobs-btn"
+          >
+            💼 Посмотреть вакансии
+          </button>
         </div>
 
         <div className="technology-detail">
           <div className="detail-main">
             <div className="detail-header">
-              <span className="category-badge">{technology.category}</span>
+              <div className="tech-meta">
+                <span className="category-badge">{technology.category}</span>
+                {technology.difficulty && (
+                  <span className={`difficulty-badge difficulty-${technology.difficulty}`}>
+                    {technology.difficulty === 'beginner' ? '👶 Начинающий' : 
+                     technology.difficulty === 'intermediate' ? '🚀 Средний' : '🔥 Продвинутый'}
+                  </span>
+                )}
+              </div>
               <div className="status-section">
                 <span className="status-icon-large">{getStatusIcon()}</span>
                 <span className={`status-badge-large status-${technology.status}`}>
@@ -87,48 +135,174 @@ function TechnologyDetail({ technologies, updateStatus, updateNote }) {
             </div>
 
             <div className="detail-section">
-              <h3>Описание</h3>
+              <h3>📝 Описание</h3>
               <p>{technology.description}</p>
             </div>
 
-            {technology.notes.length > 0 && (
+            {technology.estimatedHours && (
               <div className="detail-section">
-                <div className="notes-header" onClick={() => setNotesExpanded(!notesExpanded)}>
-                  <h3>
-                    Заметки ({completedNotes}/{totalNotes})
-                    <span className={`notes-arrow ${notesExpanded ? 'expanded' : ''}`}>
-                      ▼
-                    </span>
-                  </h3>
+                <h3>⏱️ Время изучения</h3>
+                <div className="estimated-hours">
+                  <span className="hours-badge">{technology.estimatedHours} часов</span>
+                </div>
+              </div>
+            )}
+
+            {technology.prerequisites && (
+              <div className="detail-section">
+                <h3>📚 Предварительные требования</h3>
+                <p>{technology.prerequisites}</p>
+              </div>
+            )}
+
+            {technology.learningGoals && (
+              <div className="detail-section">
+                <h3>🎯 Цели изучения</h3>
+                <p>{technology.learningGoals}</p>
+              </div>
+            )}
+
+            {technology.resources && technology.resources.length > 0 && (
+              <div className="detail-section">
+                <h3>🔗 Ресурсы</h3>
+                <div className="resources-list">
+                  {technology.resources.map((resource, index) => (
+                    <a 
+                      key={index}
+                      href={resource} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="resource-link"
+                    >
+                      📖 {resource}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="detail-section">
+              <div className="notes-header" onClick={() => setNotesExpanded(!notesExpanded)}>
+                <h3>
+                  📋 Заметки ({completedNotes}/{totalNotes})
+                  <span className={`notes-arrow ${notesExpanded ? 'expanded' : ''}`}>
+                    ▼
+                  </span>
+                </h3>
+                <div className="notes-progress">
                   <div className="notes-progress-bar">
                     <div 
                       className="notes-progress-fill" 
                       style={{ width: `${notesProgress}%` }}
                     ></div>
                   </div>
+                  <span className="notes-progress-text">{notesProgress}%</span>
                 </div>
-                
-                {notesExpanded && (
+              </div>
+              
+              {notesExpanded && (
+                <div className="notes-section">
+                  <div className="add-note-form">
+                    <input
+                      type="text"
+                      value={newNoteText}
+                      onChange={(e) => setNewNoteText(e.target.value)}
+                      placeholder="Добавить новую заметку..."
+                      className="note-input"
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddNote()}
+                    />
+                    <button 
+                      onClick={handleAddNote}
+                      className="btn btn-primary"
+                      disabled={!newNoteText.trim()}
+                    >
+                      ➕ Добавить
+                    </button>
+                  </div>
+                  
                   <div className="notes-list">
                     {technology.notes.map(note => (
                       <div 
                         key={note.id}
                         className={`note-item ${note.completed ? 'completed' : ''}`}
-                        onClick={() => handleNoteToggle(note.id)}
                       >
-                        <div className="note-checkbox">
+                        <div 
+                          className="note-checkbox"
+                          onClick={() => handleNoteToggle(note.id)}
+                        >
                           {note.completed && '✓'}
                         </div>
-                        <span className="note-text">{note.text}</span>
+                        
+                        {editingNoteId === note.id ? (
+                          <div className="note-edit-form">
+                            <input
+                              type="text"
+                              value={editingNoteText}
+                              onChange={(e) => setEditingNoteText(e.target.value)}
+                              className="note-edit-input"
+                              onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
+                            />
+                            <button 
+                              onClick={handleSaveEdit}
+                              className="btn btn-success btn-small"
+                            >
+                              ✅
+                            </button>
+                            <button 
+                              onClick={handleCancelEdit}
+                              className="btn btn-secondary btn-small"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <span 
+                              className="note-text"
+                              onClick={() => handleNoteToggle(note.id)}
+                            >
+                              {note.text}
+                            </span>
+                            <div className="note-actions">
+                              <button 
+                                onClick={() => handleStartEdit(note)}
+                                className="btn-icon"
+                                title="Редактировать"
+                              >
+                                ✏️
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteNote(note.id)}
+                                className="btn-icon"
+                                title="Удалить"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </div>
                     ))}
+                    
+                    {technology.notes.length === 0 && (
+                      <div className="empty-notes">
+                        <p>Пока нет заметок. Добавьте первую!</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {showJobs && (
+        <JobOpportunities 
+          technology={technology} 
+          onClose={() => setShowJobs(false)} 
+        />
+      )}
     </div>
   );
 }
