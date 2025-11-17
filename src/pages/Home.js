@@ -1,0 +1,151 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import ProgressHeader from '../components/ProgressHeader';
+import TechnologyCard from '../components/TechnologyCard';
+import QuickActions from '../components/QuickActions';
+import FilterTabs from '../components/FilterTabs';
+import Modal from '../components/Modal';
+
+function Home({ 
+  technologies, 
+  updateStatus, 
+  updateNote, 
+  markAllAsCompleted, 
+  resetAllStatuses, 
+  getStats 
+}) {
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [selectedTech, setSelectedTech] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false);
+
+  const randomNextTechnology = () => {
+    const notStartedTech = technologies.filter(tech => tech.status === 'not-started');
+    if (notStartedTech.length > 0) {
+      const randomTech = notStartedTech[Math.floor(Math.random() * notStartedTech.length)];
+      updateStatus(randomTech.id);
+      setSelectedTech(randomTech.id);
+      
+      setTimeout(() => {
+        alert(`🎯 Случайно выбрана технология: ${randomTech.title}\nСтатус изменен на "В процессе"`);
+      }, 100);
+    } else {
+      alert('Все технологии уже начаты или завершены!');
+    }
+  };
+
+  const handleStatusChange = (techId) => {
+    updateStatus(techId);
+    if (technologies.find(tech => tech.id === techId)?.status === 'not-started') {
+      setSelectedTech(techId);
+    }
+  };
+
+  const handleExport = () => {
+    const data = {
+      exportedAt: new Date().toISOString(),
+      technologies: technologies,
+      stats: getStats()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `technologies-export-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    setShowExportModal(true);
+  };
+
+  const filteredTechnologies = technologies.filter(tech => {
+    const matchesSearch = tech.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         tech.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         tech.notes.some(note => note.text.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesFilter = activeFilter === 'all' || tech.status === activeFilter;
+    
+    return matchesSearch && matchesFilter;
+  });
+
+  const stats = getStats();
+
+  return (
+    <div className="container">
+      <ProgressHeader 
+        technologies={technologies}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        filteredCount={filteredTechnologies.length}
+      />
+      
+      <QuickActions
+        onMarkAllCompleted={markAllAsCompleted}
+        onResetAll={resetAllStatuses}
+        onRandomNext={randomNextTechnology}
+        onExport={handleExport}
+        onShowStats={() => setShowStatsModal(true)}
+        progressPercent={stats.progressPercent}
+      />
+      
+      <FilterTabs
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        technologies={technologies}
+      />
+      
+      <div className="technologies-grid">
+        {filteredTechnologies.slice(0, 6).map(tech => (
+          <TechnologyCard
+            key={tech.id}
+            title={tech.title}
+            description={tech.description}
+            status={tech.status}
+            category={tech.category}
+            notes={tech.notes}
+            isSelected={tech.id === selectedTech}
+            onStatusChange={() => handleStatusChange(tech.id)}
+            onNoteToggle={(noteId) => updateNote(tech.id, noteId)}
+          />
+        ))}
+      </div>
+
+      {filteredTechnologies.length > 6 && (
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <Link to="/technologies" className="btn btn-primary">
+            Показать все технологии ({technologies.length})
+          </Link>
+        </div>
+      )}
+
+      {filteredTechnologies.length === 0 && (
+        <div className="empty-state">
+          <h3>🕳️ Нет технологий для отображения</h3>
+          <p>Измените фильтр или поисковый запрос, чтобы увидеть больше технологий</p>
+        </div>
+      )}
+
+      {/* Модальные окна остаются такими же как в вашем коде */}
+      <Modal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        title="✅ Экспорт завершен"
+      >
+        {/* ... ваш код модального окна ... */}
+      </Modal>
+
+      <Modal
+        isOpen={showStatsModal}
+        onClose={() => setShowStatsModal(false)}
+        title="📊 Статистика прогресса"
+      >
+        {/* ... ваш код модального окна статистики ... */}
+      </Modal>
+    </div>
+  );
+}
+
+export default Home;

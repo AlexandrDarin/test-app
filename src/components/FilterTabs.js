@@ -1,32 +1,43 @@
-// src/components/FilterTabs.js
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './FilterTabs.css';
 
 function FilterTabs({ activeFilter, onFilterChange, technologies }) {
-  const filters = [
-    { key: 'all', label: 'ВСЕ', count: technologies.length },
-    { key: 'not-started', label: 'НЕ НАЧАТЫЕ', count: technologies.filter(t => t.status === 'not-started').length },
-    { key: 'in-progress', label: 'В ПРОЦЕССЕ', count: technologies.filter(t => t.status === 'in-progress').length },
-    { key: 'completed', label: 'ЗАВЕРШЕННЫЕ', count: technologies.filter(t => t.status === 'completed').length }
+  const location = useLocation();
+  
+  const isTechnologiesPage = location.pathname === '/technologies';
+
+  const getCount = (status) => {
+    return technologies.filter(tech => status === 'all' || tech.status === status).length;
+  };
+
+  const tabs = [
+    { key: 'all', label: 'Все', count: getCount('all') },
+    { key: 'not-started', label: 'Не начато', count: getCount('not-started') },
+    { key: 'in-progress', label: 'В процессе', count: getCount('in-progress') },
+    { key: 'completed', label: 'Завершено', count: getCount('completed') }
   ];
 
   return (
     <div className="filter-tabs">
-      <div className="filter-header">
-        <h3>ФИЛЬТР ПО СТАТУСУ</h3>
-      </div>
       <div className="filter-buttons">
-        {filters.map(filter => (
+        {tabs.map(tab => (
           <button
-            key={filter.key}
-            className={`filter-btn ${activeFilter === filter.key ? 'active' : ''}`}
-            onClick={() => onFilterChange(filter.key)}
+            key={tab.key}
+            className={`filter-tab ${activeFilter === tab.key ? 'active' : ''}`}
+            onClick={() => onFilterChange(tab.key)}
           >
-            <span className="filter-label">{filter.label}</span>
-            <span className="filter-count">{filter.count}</span>
+            <span className="filter-label">{tab.label}</span>
+            <span className="tab-count">{tab.count}</span>
           </button>
         ))}
       </div>
+      
+      {!isTechnologiesPage && (
+        <Link to="/technologies" className="view-all-link">
+          Смотреть все технологии →
+        </Link>
+      )}
     </div>
   );
 }

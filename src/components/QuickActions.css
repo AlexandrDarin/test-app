@@ -22,11 +22,25 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    #ff44aa, 
-    #aa44ff, 
+    #00ff88, 
+    #00ccff, 
     transparent
   );
   animation: shimmer 3s infinite;
+}
+
+.quick-actions::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 136, 0.03) 0%, 
+    rgba(0, 204, 255, 0.03) 50%, 
+    rgba(0, 255, 136, 0.03) 100%);
+  pointer-events: none;
 }
 
 /* Секция прогресса в QuickActions */
@@ -39,6 +53,7 @@
   backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
+  z-index: 2;
 }
 
 .progress-section::before {
@@ -50,8 +65,8 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    #00ffff, 
     #00ff88, 
+    #00ccff, 
     transparent
   );
 }
@@ -69,11 +84,11 @@
 .progress-percent {
   font-size: 1.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #00ffff, #00ff88);
+  background: linear-gradient(135deg, #00ff88, #00ccff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
 }
 
 .progress-bar {
@@ -127,17 +142,21 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #ff44aa, #aa44ff);
+  background: linear-gradient(135deg, #00ff88, #00ccff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 30px rgba(255, 68, 170, 0.3);
+  text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+  position: relative;
+  z-index: 2;
 }
 
 .action-buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
+  position: relative;
+  z-index: 2;
 }
 
 .action-btn {
@@ -166,7 +185,7 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(0, 255, 136, 0.1) 0%, 
     transparent 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -185,6 +204,7 @@
   opacity: 1;
 }
 
+/* Обновляем цвета кнопок в зеленой теме */
 .btn-completed {
   color: #00ff88;
 }
@@ -206,33 +226,33 @@
 }
 
 .btn-random {
-  color: #00aaff;
+  color: #00ccff;
 }
 
 .btn-random:hover {
+  box-shadow: 
+    0 10px 30px rgba(0, 204, 255, 0.3),
+    0 0 0 1px #00ccff;
+}
+
+.btn-export {
+  color: #00aaff;
+}
+
+.btn-export:hover {
   box-shadow: 
     0 10px 30px rgba(0, 170, 255, 0.3),
     0 0 0 1px #00aaff;
 }
 
-.btn-export {
-  color: #ff44aa;
-}
-
-.btn-export:hover {
-  box-shadow: 
-    0 10px 30px rgba(255, 68, 170, 0.3),
-    0 0 0 1px #ff44aa;
-}
-
 .btn-stats {
-  color: #aa44ff;
+  color: #00ffff;
 }
 
 .btn-stats:hover {
   box-shadow: 
-    0 10px 30px rgba(170, 68, 255, 0.3),
-    0 0 0 1px #aa44ff;
+    0 10px 30px rgba(0, 255, 255, 0.3),
+    0 0 0 1px #00ffff;
 }
 
 .btn-icon {
@@ -254,7 +274,7 @@
 
 .modal-close-btn {
   padding: 14px 28px;
-  background: linear-gradient(135deg, #00aaff, #00ffff);
+  background: linear-gradient(135deg, #00ff88, #00ccff);
   border: none;
   border-radius: 12px;
   color: #000;
@@ -269,8 +289,8 @@
 
 .modal-close-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 170, 255, 0.4);
-  background: linear-gradient(135deg, #00ffff, #00ff88);
+  box-shadow: 0 10px 25px rgba(0, 255, 136, 0.4);
+  background: linear-gradient(135deg, #00ccff, #00ff88);
 }
 
 @keyframes shimmer {
