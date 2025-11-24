@@ -1,9 +1,12 @@
+// src/pages/Home.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Container, Grid, Box, Typography } from '@mui/material';
 import ProgressHeader from '../components/ProgressHeader';
 import TechnologyCard from '../components/TechnologyCard';
 import QuickActions from '../components/QuickActions';
 import FilterTabs from '../components/FilterTabs';
+import MuiDashboard from '../components/MuiDashboard';
 import Modal from '../components/Modal';
 
 function Home({ 
@@ -82,6 +85,9 @@ function Home({
         filteredCount={filteredTechnologies.length}
       />
       
+      {/* MUI Dashboard - интегрирован в ваш дизайн */}
+      <MuiDashboard technologies={technologies} />
+      
       <QuickActions
         onMarkAllCompleted={markAllAsCompleted}
         onResetAll={resetAllStatuses}
@@ -114,42 +120,36 @@ function Home({
       </div>
 
       {filteredTechnologies.length > 6 && (
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <Box textAlign="center" mt={4}>
           <Link to="/technologies" className="btn btn-primary">
             Показать все технологии ({technologies.length})
           </Link>
+        </Box>
+      )}
+
+      {filteredTechnologies.length === 0 && (
+        <div className="empty-state">
+          <h3>🕳️ Нет технологий для отображения</h3>
+          <p>Измените фильтр или поисковый запрос, чтобы увидеть больше технологий</p>
         </div>
       )}
 
-     {filteredTechnologies.length === 0 && (
-  <div className="empty-state">
-    <div className="empty-icon">🕳️</div>
-    <h3>Нет технологий для отображения</h3>
-    <p>Измените фильтр или поисковый запрос, чтобы увидеть больше технологий</p>
-    <div className="empty-actions">
-      <button 
-        onClick={() => {
-          setSearchTerm('');
-          setActiveFilter('all');
-        }}
-        className="btn btn-primary"
-      >
-        🔄 Сбросить фильтры
-      </button>
-      <Link to="/technologies" className="btn btn-secondary">
-        📚 Все технологии
-      </Link>
-    </div>
-  </div>
-)}
-
-      {/* Модальные окна остаются такими же как в вашем коде */}
       <Modal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
         title="✅ Экспорт завершен"
       >
-        {/* ... ваш код модального окна ... */}
+        <div className="modal-export-content">
+          <p style={{textAlign: 'center', marginBottom: '20px', fontSize: '1.1rem'}}>
+            Данные успешно экспортированы в JSON файл!
+          </p>
+          <button 
+            onClick={() => setShowExportModal(false)}
+            className="modal-close-btn"
+          >
+            Закрыть
+          </button>
+        </div>
       </Modal>
 
       <Modal
@@ -157,7 +157,9 @@ function Home({
         onClose={() => setShowStatsModal(false)}
         title="📊 Статистика прогресса"
       >
-        {/* ... ваш код модального окна статистики ... */}
+        <div className="modal-stats-content">
+          {/* Ваш существующий код статистики */}
+        </div>
       </Modal>
     </div>
   );

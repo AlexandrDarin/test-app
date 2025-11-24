@@ -1,8 +1,10 @@
+// src/components/Navigation.js
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Box } from '@mui/material';
 import './Navigation.css';
 
-function Navigation() {
+function Navigation({ themeToggle }) {
   const location = useLocation();
 
   return (
@@ -47,6 +49,10 @@ function Navigation() {
           </Link>
         </li>
       </ul>
+
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {themeToggle}
+      </Box>
     </nav>
   );
 }
